@@ -19,6 +19,7 @@ namespace Application.CQRS.Commands.CreateCustomer
         {
             var customer = new Customer();
             var duplicate = _context.Customers.Where(c => c.DateOfBirth == command.DateOfBirth
+            || c.Email == command.Email
             || c.FirstName == command.FirstName || c.LastName == command.LastName).FirstOrDefault();
             if (duplicate != null)
                 return 0;
