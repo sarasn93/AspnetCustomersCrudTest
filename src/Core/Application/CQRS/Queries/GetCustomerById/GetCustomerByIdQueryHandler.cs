@@ -14,15 +14,14 @@ namespace Application.CQRS.Queries.GetCustomerById
 {
     public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByIdQuery, Customer>
     {
-        private readonly IAppDbContext _context;
-        public GetCustomerByIdQueryHandler(IAppDbContext context)
+        private readonly IAsyncRepository<Customer> _repository;
+        public GetCustomerByIdQueryHandler(IAsyncRepository<Customer> repository)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
-
         public async Task<Customer> Handle(GetCustomerByIdQuery query, CancellationToken cancellationToken)
         {
-            var customer = await _context.Customers.Where(a => a.Id == query.Id).FirstOrDefaultAsync();
+            var customer = await _repository.GetByIdAsync(query.Id);
             if (customer == null)
                 throw new NotFoundException(nameof(customer), query.Id);
 

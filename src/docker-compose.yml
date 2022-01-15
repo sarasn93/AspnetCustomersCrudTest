@@ -1,0 +1,17 @@
+version: '3.4'
+
+services:
+  customerapi:
+    image: ${DOCKER_REGISTRY-}customerapi
+    build:
+      context: .
+      dockerfile: Presentation/CustomerApi/Dockerfile
+
+  customersqldb:
+    container_name: customersqldb
+    image: microsoft/mssql-server-linux:2017-latest
+    ports:
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: ""
+      ACCEPT_EULA: "Y"

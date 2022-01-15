@@ -9,13 +9,13 @@ namespace Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-  //          services.AddMediatR(Assembly.GetExecutingAssembly());
-  //          services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-  //          AssemblyScanner.FindValidatorsInAssembly(typeof(IBaseRequest).Assembly)
-  //.         ForEach(item => services.AddScoped(item.InterfaceType, item.ValidatorType));
+            //          services.AddMediatR(Assembly.GetExecutingAssembly());
+            //          services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            //          AssemblyScanner.FindValidatorsInAssembly(typeof(IBaseRequest).Assembly)
+            //.         ForEach(item => services.AddScoped(item.InterfaceType, item.ValidatorType));
 
-  //          services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
-
+            //          services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddMediatR(Assembly.GetExecutingAssembly());
 

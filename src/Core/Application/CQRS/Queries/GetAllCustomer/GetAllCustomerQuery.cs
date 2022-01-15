@@ -13,20 +13,20 @@ namespace Application.CQRS.Queries.GetAllSCustomer
     {
         public class GetAllCustomerQueryHandler : IRequestHandler<GetAllCustomerQuery, IEnumerable<Customer>>
         {
-            private readonly IAppDbContext _context;
-            public GetAllCustomerQueryHandler(IAppDbContext context)
+            private readonly IAsyncRepository<Customer> _repository;
+            public GetAllCustomerQueryHandler(IAsyncRepository<Customer> repository)
             {
-                _context = context ?? throw new ArgumentNullException(nameof(context));
+                _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             }
 
             public async Task<IEnumerable<Customer>> Handle(GetAllCustomerQuery query, CancellationToken cancellationToken)
             {
-                var customerList = await _context.Customers.ToListAsync();
+                var customerList = await _repository.GetAllAsync();
                 if (customerList == null)
                 {
                     return null;
                 }
-                return customerList.AsReadOnly();
+                return customerList;
             }
         }
     }

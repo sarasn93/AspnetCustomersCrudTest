@@ -1,4 +1,5 @@
 ﻿using Application.Repositories;
+using AutoMapper;
 using Domain.Entities;
 using MediatR;
 using Ordering.Application.Exceptions;
@@ -11,10 +12,15 @@ namespace Application.CQRS.Commands.CreateCustomer
 {
     public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerCommand, int>
     {
+        private readonly IMapper _mapper;
         private readonly IAppDbContext _context;
-        public CreateCustomerCommandHandler(IAppDbContext context)
+        private readonly IAsyncRepository<Customer> _repository;
+
+        public CreateCustomerCommandHandler(IMapper mapper, IAsyncRepository<Customer> repository, IAppDbContext context)
         {
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _context = context ?? throw new ArgumentNullException(nameof(context));
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
         public async Task<int> Handle(CreateCustomerCommand command, CancellationToken cancellationToken)
         {
@@ -22,15 +28,10 @@ namespace Application.CQRS.Commands.CreateCustomer
             var duplicateValue = CheckDuplicateValue(command);
             if (!string.IsNullOrWhiteSpace(duplicateValue))
                 throw new DuplicateException(duplicateValue);
-            customer.FirstName = command.FirstName;
-            customer.LastName = command.LastName;
-            customer.PhoneNumber = command.PhoneNumber;
-            customer.Email = command.Email;
-            customer.DateOfBirth = command.DateOfBirth;
-            customer.BankAccountNumber = command.BankAccountNumber;
-            _context.Customers.Add(customer);
-            await _context.SaveChangesAsync();
-            return customer.Id;
+            var newcustomer = _mapper.Map<Customer>(command);
+
+            await _repository.AddAsync(newcustomer);
+            return newcustomer.Id;
         }
 
         private string CheckDuplicateValue(CreateCustomerCommand command)

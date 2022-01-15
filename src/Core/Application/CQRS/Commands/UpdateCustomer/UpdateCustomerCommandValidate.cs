@@ -26,7 +26,7 @@ namespace Application.CQRS.Commands.UpdateCustomer
                 .NotNull();
             RuleFor(p => p.BankAccountNumber)
                  .NotEmpty().WithMessage("{BankAccountNumber} is required.")
-                 .Matches(@"^\d$").WithMessage("Your Bank Account Number is not valid")
+                 .Matches(@"^[0-9]{1,10}$").WithMessage("Your Bank Account Number is not valid")
                  .NotNull();
         }
     }

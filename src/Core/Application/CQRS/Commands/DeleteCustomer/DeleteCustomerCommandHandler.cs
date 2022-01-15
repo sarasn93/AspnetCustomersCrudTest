@@ -12,19 +12,18 @@ namespace Application.CQRS.Commands.DeleteCustomer
 {
     public class DeleteCustomerCommandHandler : IRequestHandler<DeleteCustomerCommand, int>
     {
-        private readonly IAppDbContext _context;
-        public DeleteCustomerCommandHandler(IAppDbContext context)
+        private readonly IAsyncRepository<Customer> _repository;
+        public DeleteCustomerCommandHandler(IAsyncRepository<Customer> repository)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
         public async Task<int> Handle(DeleteCustomerCommand command, CancellationToken cancellationToken)
         {
-            var customer = await _context.Customers.Where(a => a.Id == command.Id).FirstOrDefaultAsync();
+            var customer = await _repository.GetByIdAsync(command.Id);
             if (customer == null)
                 throw new NotFoundException(nameof(customer), command.Id);
-            _context.Customers.Remove(customer);
-            await _context.SaveChangesAsync();
+            await _repository.DeleteAsync(customer);
             return customer.Id;
         }
     }
