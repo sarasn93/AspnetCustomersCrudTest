@@ -1,6 +1,7 @@
 ﻿using Application.Repositories;
 using Domain.Entities;
 using MediatR;
+using Ordering.Application.Exceptions;
 using System;
 using System.Linq;
 using System.Threading;
@@ -21,7 +22,7 @@ namespace Application.CQRS.Commands.UpdateCustomer
         {
             var customer = _context.Customers.Where(a => a.Id == command.Id).FirstOrDefault();
             if (customer == null)
-                throw new NullReferenceException(nameof(customer));
+                throw new NotFoundException(nameof(customer), command.Id);
 
             customer.FirstName = command.FirstName;
             customer.LastName = command.LastName;

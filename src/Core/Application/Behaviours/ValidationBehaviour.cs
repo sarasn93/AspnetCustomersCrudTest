@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace Application
 {
-    public class ValidationBehaviors<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
+    public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> 
+        where TRequest : IRequest<TResponse>
     {
         private readonly IEnumerable<IValidator> _validators;
-
-        public ValidationBehaviors(IEnumerable<IValidator<TRequest>> validators)
+        public ValidationBehaviour(IEnumerable<IValidator<TRequest>> validators)
         {
-            _validators = validators;
+            _validators = validators ?? throw new ArgumentNullException(nameof(validators));
         }
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
@@ -23,8 +23,9 @@ namespace Application
             {
                 var context = new ValidationContext<TRequest>(request);
                 var ValidationResults = await Task.WhenAll(_validators.Select(v => v.ValidateAsync(context, cancellationToken)));
-                var faliars = ValidationResults.SelectMany(r => r.Errors).Where(f => f != null).ToList();
-
+                var failures = ValidationResults.SelectMany(r => r.Errors).Where(f => f != null).ToList();
+                if (failures.Count != 0)
+                    throw new ValidationException(failures);
             }
             return await next();
         }

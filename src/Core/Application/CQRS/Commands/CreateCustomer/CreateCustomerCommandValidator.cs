@@ -18,7 +18,7 @@ namespace Application.CQRS.Commands.CreateCustomer
                 .NotNull();
             RuleFor(p => p.Email)
                 .NotEmpty().WithMessage("{Email} is required.")
-                .EmailAddress().WithMessage("{Email} is required.")
+                .EmailAddress().WithMessage("{Email} is not valid.")
                 .NotNull();
             RuleFor(p => p.PhoneNumber)
                 .Matches(@"^((?:[0-9]\-?){6,14}[0-9])|((?:[0-9]\x20?){6,14}[0-9])$").WithMessage("PhoneNumber is not valid")
@@ -26,6 +26,7 @@ namespace Application.CQRS.Commands.CreateCustomer
                 .NotNull();
             RuleFor(p => p.BankAccountNumber)
                  .NotEmpty().WithMessage("{BankAccountNumber} is required.")
+                 .Matches(@"^\d$").WithMessage("Your Bank Account Number is not valid")
                  .NotNull();
         }
 

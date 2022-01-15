@@ -2,6 +2,7 @@
 using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Ordering.Application.Exceptions;
 using System;
 using System.Linq;
 using System.Threading;
@@ -21,7 +22,7 @@ namespace Application.CQRS.Commands.DeleteCustomer
         {
             var customer = await _context.Customers.Where(a => a.Id == command.Id).FirstOrDefaultAsync();
             if (customer == null)
-                throw new NullReferenceException(nameof(customer));
+                throw new NotFoundException(nameof(customer), command.Id);
             _context.Customers.Remove(customer);
             await _context.SaveChangesAsync();
             return customer.Id;

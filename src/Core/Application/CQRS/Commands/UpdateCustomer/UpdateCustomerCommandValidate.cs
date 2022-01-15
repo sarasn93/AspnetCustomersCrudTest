@@ -7,9 +7,9 @@ namespace Application.CQRS.Commands.UpdateCustomer
         public UpdateCustomerCommandValidate()
         {
             RuleFor(p => p.FirstName)
-               .NotEmpty().WithMessage("{FirstName} is required.")
-               .NotNull()
-               .MaximumLength(50).WithMessage("{UserName} must not exceed 50 characters.");
+              .NotEmpty().WithMessage("{FirstName} is required.")
+              .NotNull()
+              .MaximumLength(50).WithMessage("{UserName} must not exceed 50 characters.");
             RuleFor(p => p.LastName)
                .NotEmpty().WithMessage("{LastName} is required.")
                .NotNull();
@@ -18,7 +18,7 @@ namespace Application.CQRS.Commands.UpdateCustomer
                 .NotNull();
             RuleFor(p => p.Email)
                 .NotEmpty().WithMessage("{Email} is required.")
-                .EmailAddress().WithMessage("{Email} is required.")
+                .EmailAddress().WithMessage("{Email} is not valid.")
                 .NotNull();
             RuleFor(p => p.PhoneNumber)
                 .Matches(@"^((?:[0-9]\-?){6,14}[0-9])|((?:[0-9]\x20?){6,14}[0-9])$").WithMessage("PhoneNumber is not valid")
@@ -26,6 +26,7 @@ namespace Application.CQRS.Commands.UpdateCustomer
                 .NotNull();
             RuleFor(p => p.BankAccountNumber)
                  .NotEmpty().WithMessage("{BankAccountNumber} is required.")
+                 .Matches(@"^\d$").WithMessage("Your Bank Account Number is not valid")
                  .NotNull();
         }
     }

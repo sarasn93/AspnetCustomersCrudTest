@@ -1,6 +1,7 @@
 ﻿using Application.Repositories;
 using Domain.Entities;
 using MediatR;
+using Ordering.Application.Exceptions;
 using System;
 using System.Linq;
 using System.Threading;
@@ -18,11 +19,9 @@ namespace Application.CQRS.Commands.CreateCustomer
         public async Task<int> Handle(CreateCustomerCommand command, CancellationToken cancellationToken)
         {
             var customer = new Customer();
-            var duplicate = _context.Customers.Where(c => c.DateOfBirth == command.DateOfBirth
-            || c.Email == command.Email
-            || c.FirstName == command.FirstName || c.LastName == command.LastName).FirstOrDefault();
-            if (duplicate != null)
-                return 0;
+            var duplicateValue = CheckDuplicateValue(command);
+            if (!string.IsNullOrWhiteSpace(duplicateValue))
+                throw new DuplicateException(duplicateValue);
             customer.FirstName = command.FirstName;
             customer.LastName = command.LastName;
             customer.PhoneNumber = command.PhoneNumber;
@@ -34,5 +33,23 @@ namespace Application.CQRS.Commands.CreateCustomer
             return customer.Id;
         }
 
+        private string CheckDuplicateValue(CreateCustomerCommand command)
+        {
+            var dulicate = _context.Customers.Where(c => c.FirstName == command.FirstName
+             || c.LastName == command.LastName || c.Email == command.Email
+             || c.DateOfBirth == command.DateOfBirth).FirstOrDefault();
+            if (dulicate != null)
+            {
+                if (dulicate.FirstName == command.FirstName)
+                    return "FirstName";
+                if (dulicate.LastName == command.LastName)
+                    return "LastName";
+                if (dulicate.Email == command.Email)
+                    return "Email";
+                if (dulicate.DateOfBirth == command.DateOfBirth)
+                    return "Date of birth";
+            }
+            return null;
+        }
     }
 }

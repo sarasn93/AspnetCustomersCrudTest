@@ -2,6 +2,7 @@
 using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Ordering.Application.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,9 +24,8 @@ namespace Application.CQRS.Queries.GetCustomerById
         {
             var customer = await _context.Customers.Where(a => a.Id == query.Id).FirstOrDefaultAsync();
             if (customer == null)
-            {
-                return null;
-            }
+                throw new NotFoundException(nameof(customer), query.Id);
+
             return customer;
         }
     }
