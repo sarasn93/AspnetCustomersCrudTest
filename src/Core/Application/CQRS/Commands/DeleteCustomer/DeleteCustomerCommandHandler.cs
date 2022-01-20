@@ -12,8 +12,8 @@ namespace Application.CQRS.Commands.DeleteCustomer
 {
     public class DeleteCustomerCommandHandler : IRequestHandler<DeleteCustomerCommand, int>
     {
-        private readonly IAsyncRepository<Customer> _repository;
-        public DeleteCustomerCommandHandler(IAsyncRepository<Customer> repository)
+        private readonly ICustomerRepository _repository;
+        public DeleteCustomerCommandHandler(ICustomerRepository repository)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }

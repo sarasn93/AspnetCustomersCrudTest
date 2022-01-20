@@ -3,7 +3,8 @@ using Application.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Ordering.Infrastructure.Repositories;
+using Infrastructure.Repositories;
+using Persistence.Repositories;
 
 namespace Persistence
 {
@@ -19,6 +20,7 @@ namespace Persistence
             services.AddScoped<IAppDbContext>(provider => provider.GetService<AppDbContext>());
             services.AddScoped(typeof(IAppDbContext), typeof(AppDbContext));
             services.AddScoped(typeof(IAsyncRepository<>), typeof(RepositoryBase<>));
+            services.AddScoped(typeof(ICustomerRepository), typeof(CustomerRepository));
         }
     }
 }

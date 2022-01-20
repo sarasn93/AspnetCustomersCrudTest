@@ -13,8 +13,8 @@ namespace Application.CQRS.Queries.GetAllSCustomer
     {
         public class GetAllCustomerQueryHandler : IRequestHandler<GetAllCustomerQuery, IEnumerable<Customer>>
         {
-            private readonly IAsyncRepository<Customer> _repository;
-            public GetAllCustomerQueryHandler(IAsyncRepository<Customer> repository)
+            private readonly ICustomerRepository _repository;
+            public GetAllCustomerQueryHandler(ICustomerRepository repository)
             {
                 _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             }

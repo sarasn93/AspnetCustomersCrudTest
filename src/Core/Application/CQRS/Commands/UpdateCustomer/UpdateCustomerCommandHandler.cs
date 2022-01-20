@@ -13,12 +13,12 @@ namespace Application.CQRS.Commands.UpdateCustomer
     public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerCommand, int>
     {
 
-        private readonly IMapper _mapper;
-        private readonly IAsyncRepository<Customer> _repository;
+        //private readonly IMapper _mapper;
+        private readonly ICustomerRepository _repository;
 
-        public UpdateCustomerCommandHandler(IAsyncRepository<Customer> repository, IMapper mapper)
+        public UpdateCustomerCommandHandler(ICustomerRepository repository, IMapper mapper)
         {
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            //_mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 

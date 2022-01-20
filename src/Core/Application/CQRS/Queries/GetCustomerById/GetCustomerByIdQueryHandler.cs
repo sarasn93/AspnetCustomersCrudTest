@@ -14,8 +14,8 @@ namespace Application.CQRS.Queries.GetCustomerById
 {
     public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByIdQuery, Customer>
     {
-        private readonly IAsyncRepository<Customer> _repository;
-        public GetCustomerByIdQueryHandler(IAsyncRepository<Customer> repository)
+        private readonly ICustomerRepository _repository;
+        public GetCustomerByIdQueryHandler(ICustomerRepository repository)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
